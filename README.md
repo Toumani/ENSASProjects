@@ -17,7 +17,7 @@ US signifie _user story_
 | #7 | Scrum master  | Définir un ensemble de tâches constituant chaque sprint                              | Moduler le projet                                | 1        | 5    |
 | #8 | Développeur   | Pouvoir visualiser et mettre à jour le kanban concernant mes tâches                  | Rester synchronisé avec mon équipe               | 2        | 5    |
 
-- Ait El Abdelhakim
+- AIT EL HAD Abdelhakim
 - Errazaki Hafsaa
 - Kardouh Sanaa
 - Sidibe Toumani
