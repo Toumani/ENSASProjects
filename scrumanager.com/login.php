@@ -39,9 +39,9 @@ if(isset($_POST['username'])){
 	<!-- Google Fonts -->
 	<link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
 
-	<link rel="stylesheet" href="css/animate.css">
+	<link rel="stylesheet" href="css-daneden/animate.css">
 	<!-- Custom Stylesheet -->
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css-daneden/style.css">
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
@@ -50,7 +50,7 @@ if(isset($_POST['username'])){
 <body>
 	<div class="container">
 		<div class="top">
-			<h1 id="title" class="hidden"><span id="logo"> <span>SCRUManager</span></span></h1>
+			<h1 id="title" class="hidden"><span id="logo"><span>SCRUManager</span></span></h1>
 		</div>
 		<div class="login-box"> <!-- class="animated fadeInUp" -->
 			<div class="box-header">

@@ -5,15 +5,15 @@ if(!empty($_POST['text1'])) {
     mysql_select_db("demo");
 
     // Je mets aussi certaines sécurités ici…
-    $passe = mysql_real_escape_string(htmlspecialchars($_POST['number']));
-    $passe2 = mysql_real_escape_string(htmlspecialchars($_POST['password']));
+    $passe = mysql_real_escape_string(htmlspecialchars($_POST['password']));
+    $passe2 = mysql_real_escape_string(htmlspecialchars($_POST['password-confirm']));
     if($passe == $passe2) {
-        $pseudo = mysql_real_escape_string(htmlspecialchars($_POST['text1']));
+        $pseudo = mysql_real_escape_string(htmlspecialchars($_POST['username']));
         $email = mysql_real_escape_string(htmlspecialchars($_POST['email']));
         // Je vais crypter le mot de passe.
         $passe = sha1($passe);
 
-        mysql_query("INSERT INTO validation VALUES('', '$pseudo', '$passe', '$email')");
+        mysql_query("INSERT INTO developer VALUES('', '$pseudo', '$passe', '$email')");
     }
     
     else {
@@ -41,13 +41,14 @@ if(!empty($_POST['text1'])) {
             window.scrollTo(0, 1);
         }
     </script>
+    <link rel="stylesheet" href="css-daneden/style.css" type="text/css" media="all">
     <!-- //Meta-Tags -->
     <!-- Index-Page-CSS -->
-    <link rel="stylesheet" href="csss/style.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css-w3layouts/style.css" type="text/css" media="all">
     <!-- //Custom-Stylesheet-Links -->
     <!--fonts -->
     <!-- //fonts -->
-    <link rel="stylesheet" href="csss/font-awesome.css" type="text/css" media="all">
+    <link rel="stylesheet" href="css-w3layouts/font-awesome.css" type="text/css" media="all">
     <!-- //Font-Awesome-File-Links -->
     
     <!-- Google fonts -->
@@ -60,7 +61,9 @@ if(!empty($_POST['text1'])) {
 <!-- Body -->
 
 <body>
-    <h1 class="title-agile text-center">Veuillez Inscrivez vous!!</h1>
+    <div class="top">
+        <h1 id="title" class="hidden"><span id="logo"><span>SCRUManager</span></span></h1>
+    </div>
     <div class="content-w3ls">
         <div class="content-bottom">
             <h2>Register Here <i class="fa fa-hand-o-down" aria-hidden="true"></i></h2>
@@ -68,7 +71,7 @@ if(!empty($_POST['text1'])) {
                 <div class="field-group">
                     <span class="fa fa-user" aria-hidden="true"></span>
                     <div class="wthree-field">
-                        <input name="text1" id="text1" type="text" value="" placeholder="Username" required>
+                        <input name="username" id="username" type="text" value="" placeholder="Username" required>
                     </div>
                 </div>
                 <div class="field-group">
@@ -80,26 +83,26 @@ if(!empty($_POST['text1'])) {
                 <div class="field-group">
                     <span class="fa fa-lock" aria-hidden="true"></span>
                     <div class="wthree-field">
-                        <input name="number" id="number" type="Password" value="" placeholder="password" required>
+                        <input name="password" id="number" type="Password" value="" placeholder="Password" required>
                     </div>
                 </div>
                 <div class="field-group">
                     <span class="fa fa-lock" aria-hidden="true"></span>
                     <div class="wthree-field">
-                        <input name="password" id="myInput" type="text" placeholder="Confirm Password">
+                        <input name="password-confirm" id="myInput" type="text" placeholder="Confirm Password">
                     </div>
                 </div>
                 <div class="wthree-field">
                     <input id="saveForm" name="saveForm" type="submit" value="Register" />
                 </div>
                 <div class="account">
-                    <p class="text-center">Already have an account ? <a href="#">Login</a></p>
+                    <p class="text-center">Already have an account ? <a href="login.php">Login</a></p>
                 </div>
             </form>
         </div>
     </div>
     <div class="copyright text-center">
-        <p>Â© 2018 Border Register Form. All rights reserved | Design by
+        <p>© 2018 Border Register Form. All rights reserved | Design by
             <a href="http://w3layouts.com">W3layouts</a>
         </p>
     </div>
