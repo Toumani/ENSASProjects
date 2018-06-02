@@ -1,5 +1,5 @@
 body {
-	background: url("../images/photo_bg.jpg") no-repeat center center fixed;
+	background: url("../images/photo_bg1.jpg") no-repeat center center fixed;
 	background-size: cover;
 	font-size: 16px;
 	font-family: 'Lato', sans-serif;
@@ -16,8 +16,8 @@ h1#title {
 	color: white;
 	text-shadow: 0 0 10px rgba(0,0,0,0.8);
 	margin: 0 auto;
-	padding-top: 180px;
-	max-width: 300px;
+	padding-top: 30px;
+	width: 100%;
 	text-align: center;
 	position: relative;
 	top: 0px;
@@ -37,7 +37,7 @@ h2 {
 }
 
 a {
-	text-decoration: none;
+	text-decoration: underline dotted lightslategray;
 	color: #666;
 }
 
@@ -76,6 +76,10 @@ p.small {
 	border-radius: 5px;
 	box-shadow: 0 5px 50px rgba(0,0,0,0.4);
 	text-align: center;
+}
+
+.login-box:hover {
+	cursor: pointer;
 }
 
 .login-box .box-header {

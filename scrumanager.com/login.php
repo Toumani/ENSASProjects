@@ -50,9 +50,9 @@ if(isset($_POST['username'])){
 <body>
 	<div class="container">
 		<div class="top">
-			<h1 id="title" class="hidden"><span id="logo"> <span>lightware</span></span></h1>
+			<h1 id="title" class="hidden"><span id="logo"> <span>SCRUManager</span></span></h1>
 		</div>
-		<div class="login-box animated fadeInUp">
+		<div class="login-box"> <!-- class="animated fadeInUp" -->
 			<div class="box-header">
 				<h2>Log In</h2>
 			</div>
@@ -68,7 +68,7 @@ if(isset($_POST['username'])){
 	
 			<input type="submit" id="SignIn" value="Sign In">
 			<br/>
-			<a href="#"><p class="small">Forgot your password?</p></a>
+			<p class="small">Not subribed yet ? <a href="register.php">Sign up</a> in seconds</p>
 
 			</form>
 		</div>
