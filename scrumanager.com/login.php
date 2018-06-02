@@ -1,5 +1,5 @@
 <?php
-$host="localhost";
+/* $host="localhost";
 $user="root";
 $password="";
 $db="demo";
@@ -16,17 +16,17 @@ if(isset($_POST['username'])){
 	if(mysql_num_rows($result)==1){
      
      /**echo "You have Successfully Logged in ";**/
-     include("inscription.php");
+/*     include("inscription.php");
      exit();
 
 	}
 	else{
 	echo "you have Entered Incorrect Password";
 	exit();
-	}
+	} 
 
 }
-
+*/
 ?>
 
 <!DOCTYPE html>
