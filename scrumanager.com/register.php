@@ -1,27 +1,3 @@
-<?php
-if(!empty($_POST['text1'])) {
-    // D'abord, je me connecte à la base de données.
-    mysql_connect("localhost", "root", "");
-    mysql_select_db("demo");
-
-    // Je mets aussi certaines sécurités ici…
-    $passe = mysql_real_escape_string(htmlspecialchars($_POST['password']));
-    $passe2 = mysql_real_escape_string(htmlspecialchars($_POST['password-confirm']));
-    if($passe == $passe2) {
-        $pseudo = mysql_real_escape_string(htmlspecialchars($_POST['username']));
-        $email = mysql_real_escape_string(htmlspecialchars($_POST['email']));
-        // Je vais crypter le mot de passe.
-        $passe = sha1($passe);
-
-        mysql_query("INSERT INTO developer VALUES('', '$pseudo', '$passe', '$email')");
-    }
-    
-    else {
-        echo 'Les deux mots de passe que vous avez rentrés ne correspondent pas…';
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="zxx">
 <!-- Head -->
@@ -67,7 +43,7 @@ if(!empty($_POST['text1'])) {
     <div class="content-w3ls">
         <div class="content-bottom">
             <h2>Register Here <i class="fa fa-hand-o-down" aria-hidden="true"></i></h2>
-            <form action="#" method="post">
+            <form action="add_developer.php" method="post">
                 <div class="field-group">
                     <span class="fa fa-user" aria-hidden="true"></span>
                     <div class="wthree-field">
@@ -89,7 +65,7 @@ if(!empty($_POST['text1'])) {
                 <div class="field-group">
                     <span class="fa fa-lock" aria-hidden="true"></span>
                     <div class="wthree-field">
-                        <input name="password-confirm" id="myInput" type="text" placeholder="Confirm Password">
+                        <input name="password-confirm" id="myInput" type="password" placeholder="Confirm Password">
                     </div>
                 </div>
                 <div class="wthree-field">

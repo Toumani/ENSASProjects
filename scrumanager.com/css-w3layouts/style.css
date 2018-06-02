@@ -368,6 +368,7 @@ form .field-group .wthree-field {
     box-sizing: border-box;
 	font-family: 'Nunito', sans-serif;
     width: 100%;
+    height: 100%;
     outline: none;
 }
 .account{
