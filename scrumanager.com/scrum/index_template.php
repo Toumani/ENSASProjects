@@ -3,7 +3,7 @@
 
 	<head>
 		<title>Gentallela Alela! | </title>
-<?php include 'meta.php' ?>
+<?php include '../../meta.php' ?>
 	</head>
 
 
@@ -37,14 +37,14 @@
 						<br />
 
 						<!-- sidebar menu + footer button -->
-<?php include 'sidebar.php'; ?>
+<?php include '../../sidebar.php'; ?>
 						<!-- /sidebar menu + footer button -->
 
 					</div>
 				</div>
 
 				<!-- top navigation -->
-<?php include 'top_navigation.php'; ?>
+<?php include '../../top_navigation.php'; ?>
 				<!-- /top navigation -->
 
 				<!-- page content -->
@@ -440,7 +440,7 @@
 					</div>
 
 					<!-- footer content -->
-<?php include 'footer.php'; ?>
+<?php include '../../footer.php'; ?>
 					<!-- /footer content -->
 
 				</div>
@@ -449,9 +449,9 @@
 
 		</div>
 
-<?php include 'custom_notifications.php'; ?>
+<?php include '../../custom_notifications.php'; ?>
 
-<?php include 'scripts.php'; ?>
+<?php include '../../scripts.php'; ?>
 
 	</body>
 

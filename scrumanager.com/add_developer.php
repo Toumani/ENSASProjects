@@ -2,6 +2,7 @@
 require_once 'identifiants.php';
 
 try {
+	// Checking datas integrity
 	if ($PDOException)
 		throw new PDOException();
 	if (!isset($_POST['username']) || ! isset($_POST['email']) || ! isset($_POST['password']) || ! isset($_POST['password-confirm']))
@@ -18,12 +19,29 @@ try {
 	if ($emailExists)
 		throw new Exception('Email exists');
 	
+	// Everything is okay
+	// Let's insert the new user into the database
 	$database->prepare('INSERT INTO developer (name,email,password) VALUES (:name,:email,:password)')
 			->execute(Array('name' => $username,
 							'email' => $email,
 							'password' => $password));
 	
-	// header('Location:index.php');
+	// Now let's create a folder with the required files for the new user
+	$userId = $database->query('SELECT id FROM developer WHERE email = \''. $email . '\'')->fetch()['id'];
+	mkdir(SITE_ROOT . 'scrum/' . $userId, 0777, true);
+	$indexContent =
+'<?php
+session_start();
+
+include \'../index_template.php\';
+';
+	file_put_contents(SITE_ROOT . 'scrum/' . $userId . '/index.php', $indexContent);
+
+	session_start();
+	$_SESSION['email'] = $email;
+	$_SESSION['id'] = $userId;
+	
+	header('Location:scrum/' . $userId . '/index.php');
 }
 catch (PDOException $ex) {
 
@@ -31,29 +49,3 @@ catch (PDOException $ex) {
 catch (Exception $ex) {
 
 }
-
-/*
-{
-    // D'abord, je me connecte à la base de données.
-    mysql_connect(host, DBusername, DBpassword);
-	mysql_select_db(dbname);
-	
-	$database->prepare();
-
-    // Je mets aussi certaines sécurités ici…
-    $passe = mysql_real_escape_string(htmlspecialchars($_POST['password']));
-    $passe2 = mysql_real_escape_string(htmlspecialchars($_POST['password-confirm']));
-    if($passe == $passe2) {
-        $pseudo = mysql_real_escape_string(htmlspecialchars($_POST['username']));
-        $email = mysql_real_escape_string(htmlspecialchars($_POST['email']));
-        // Je vais crypter le mot de passe.
-        $passe = sha1($passe);
-
-        mysql_query("INSERT INTO developer (name, email, password) VALUES('$pseudo', '$passe', '$email')");
-    }
-    
-    else {
-        echo 'Les deux mots de passe que vous avez rentrés ne correspondent pas…';
-    }
-}
-*/
