@@ -1,9 +1,38 @@
+<?php
+session_start();
+
+$_SESSION['id'] = 1;
+$_SESSION['email'] = 'toumani49@gmail.com';
+$_SESSION['username'] = 'Toumani';
+
+include '../../identifiants.php';
+
+$memberedProject_vrac = $database->query('SELECT id,name,folder_name,created,status,owner_id,master_id
+											FROM project P
+											INNER JOIN project_developer PD
+											ON P.id = PD.project_id
+											WHERE PD.developer_id = ' . $_SESSION['id']);
+
+$masteredProject_vrac = $database->query('SELECT id,name,folder_name,created,status,owner_id,master_id
+											FROM project
+											WHERE owner_id = ' . $_SESSION['id']);
+// $
+function projectProgress($project_id) {
+	// TODO : return the progess in percentage of the project id given in parameter
+	// To do so just sum up the cost of completed user stories and take it ratio with the tatal cost of the backlog
+	
+	// Facking
+	return random_int(1,100);
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 	<head>
-		<title>Gentallela Alela! | </title>
-<?php include '../../meta.php' ?>
+		<title>Project list | SCRUManager</title>
+<?php include '../../meta.php'; ?>
 	</head>
 
 
@@ -18,18 +47,18 @@
 					<div class="left_col scroll-view">
 
 						<div class="navbar nav_title" style="border: 0;">
-							<a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Gentellela Alela!</span></a>
+							<a href="../<?php echo $_SESSION['id']; ?>/index.php" class="site_title"><i class="fa fa-paw"></i><span>SCRUManager</span></a>
 						</div>
 						<div class="clearfix"></div>
 
 						<!-- menu prile quick info -->
 						<div class="profile">
 							<div class="profile_pic">
-								<img src="images/img.jpg" alt="..." class="img-circle profile_img">
+								<img src="avatar.jpg" alt="..." class="img-circle profile_img">
 							</div>
 							<div class="profile_info">
 								<span>Welcome,</span>
-								<h2>John Doe</h2>
+								<h2><?php echo $_SESSION['username']; ?></h2>
 							</div>
 						</div>
 						<!-- /menu prile quick info -->
@@ -53,7 +82,7 @@
 					<div class="">
 						<div class="page-title">
 							<div class="title_left">
-								<h3>Projects <small>Listing design</small></h3>
+								<h3>Projects <small>all projects</small></h3>
 							</div>
 
 							<div class="title_right">
@@ -61,28 +90,29 @@
 									<div class="input-group">
 										<input type="text" class="form-control" placeholder="Search for...">
 										<span class="input-group-btn">
-															<button class="btn btn-default" type="button">Go!</button>
-													</span>
+											<button class="btn btn-default" type="button">Go!</button>
+										</span>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="clearfix"></div>
 
+						<!-- /Project where user is SCRUM master -->
 						<div class="row">
 							<div class="col-md-12">
 								<div class="x_panel">
 									<div class="x_title">
-										<h2>Projects</h2>
+										<h2>Projects you're mastering</h2>
 										<ul class="nav navbar-right panel_toolbox">
 											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
 											</li>
 											<li class="dropdown">
 												<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
 												<ul class="dropdown-menu" role="menu">
-													<li><a href="#">Settings 1</a>
+													<li><a href="#">Hide completed projects</a>
 													</li>
-													<li><a href="#">Settings 2</a>
+													<li><a href="#">Hide aborded projects</a>
 													</li>
 												</ul>
 											</li>
@@ -93,7 +123,7 @@
 									</div>
 									<div class="x_content">
 
-										<p>Simple table with project listing with progress and editing options</p>
+										<p>Listing projects you created where you are the SCRUM master</p>
 
 										<!-- start project list -->
 										<table class="table table-striped projects">
@@ -104,331 +134,156 @@
 													<th>Team Members</th>
 													<th>Project Progress</th>
 													<th>Status</th>
-													<th style="width: 20%">#Edit</th>
+													<th style="width: 20%">Action</th>
 												</tr>
 											</thead>
 											<tbody>
+<?php
+$i = 0;
+while ($masteredProject = $masteredProject_vrac->fetch()) {
+	$i++;
+	$projectProgress = projectProgress($masteredProject['id']);
+	$member_vrac = $database->query('	SELECT id,name
+										FROM project_developer PD
+										INNER JOIN developer D
+										ON PD.developer_id = D.id
+										WHERE PD.project_id = ' . $masteredProject['id']);
+?>
 												<tr>
-													<td>#</td>
+													<td><?php echo $i; ?></td>
 													<td>
-														<a>Pesamakini Backend UI</a>
+														<a><?php echo $masteredProject['name']; ?></a>
 														<br />
-														<small>Created 01.01.2015</small>
+														<small>Created <?php echo $masteredProject['created']; ?></small>
 													</td>
 													<td>
 														<ul class="list-inline">
+<?php
+	while ($member = $member_vrac->fetch()) {
+?>
 															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
+																<a href="../<?php echo $member['id']; ?>/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
+<?php
+	}
+?>
 														</ul>
 													</td>
 													<td class="project_progress">
 														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="57"></div>
+															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="<?php echo $projectProgress; ?>"></div>
 														</div>
-														<small>57% Complete</small>
+														<small><?php echo $projectProgress; ?>% Complete</small>
 													</td>
 													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
+														<button type="button" class="btn btn-success btn-xs">Fine</button>
 													</td>
 													<td>
 														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
 														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
 													</td>
 												</tr>
+<?php
+}
+?>
+											</tbody>
+										</table>
+										<!-- end project list -->
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Project where user is SCRUM master -->
+
+						<!-- Project where user is a simple member -->
+						<div class="row">
+							<div class="col-md-12">
+								<div class="x_panel">
+									<div class="x_title">
+										<h2>Projects you're participating</h2>
+										<ul class="nav navbar-right panel_toolbox">
+											<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+											</li>
+											<li class="dropdown">
+												<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Hide completed projects</a>
+													</li>
+													<li><a href="#">Hide aborded projects</a>
+													</li>
+												</ul>
+											</li>
+											<li><a class="close-link"><i class="fa fa-close"></i></a>
+											</li>
+										</ul>
+										<div class="clearfix"></div>
+									</div>
+									<div class="x_content">
+
+										<p>Listing projects you were invited to</p>
+
+										<!-- start project list -->
+										<table class="table table-striped projects">
+											<thead>
 												<tr>
-													<td>#</td>
+													<th style="width: 1%">#</th>
+													<th style="width: 20%">Project Name</th>
+													<th>Team Members</th>
+													<th>Project Progress</th>
+													<th>Status</th>
+													<th style="width: 20%">Action</th>
+												</tr>
+											</thead>
+											<tbody>
+<?php
+$i = 0;
+while ($memberedProject = $memberedProject_vrac->fetch()) {
+	$i++;
+	$projectProgress = projectProgress($memberedProject['id']);
+	$member_vrac = $database->query('	SELECT id,name
+										FROM project_developer PD
+										INNER JOIN developer D
+										ON PD.developer_id = D.id
+										WHERE PD.project_id = ' . $memberedProject['id']);
+?>
+												<tr>
+													<td><?php echo $i; ?></td>
 													<td>
-														<a>Pesamakini Backend UI</a>
+														<a><?php echo $memberedProject['name']; ?></a>
 														<br />
-														<small>Created 01.01.2015</small>
+														<small>Created <?php echo $memberedProject['created']; ?></small>
 													</td>
 													<td>
 														<ul class="list-inline">
+<?php
+	while ($member = $member_vrac->fetch()) {
+?>
 															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
+																<a href="../<?php echo $member['id']; ?>/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
+<?php
+	}
+?>
 														</ul>
 													</td>
 													<td class="project_progress">
 														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="47"></div>
+															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="<?php echo $projectProgress; ?>"></div>
 														</div>
-														<small>47% Complete</small>
+														<small><?php echo $projectProgress; ?>% Complete</small>
 													</td>
 													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
+														<button type="button" class="btn btn-success btn-xs">Fine</button>
 													</td>
 													<td>
 														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
 														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
 													</td>
 												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="77"></div>
-														</div>
-														<small>77% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="60"></div>
-														</div>
-														<small>60% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="12"></div>
-														</div>
-														<small>12% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="35"></div>
-														</div>
-														<small>35% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="87"></div>
-														</div>
-														<small>87% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="77"></div>
-														</div>
-														<small>77% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
-												<tr>
-													<td>#</td>
-													<td>
-														<a>Pesamakini Backend UI</a>
-														<br />
-														<small>Created 01.01.2015</small>
-													</td>
-													<td>
-														<ul class="list-inline">
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-															<li>
-																<img src="images/user.png" class="avatar" alt="Avatar">
-															</li>
-														</ul>
-													</td>
-													<td class="project_progress">
-														<div class="progress progress_sm">
-															<div class="progress-bar bg-green" role="progressbar" data-transitiongoal="77"></div>
-														</div>
-														<small>77% Complete</small>
-													</td>
-													<td>
-														<button type="button" class="btn btn-success btn-xs">Success</button>
-													</td>
-													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-														<a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a>
-														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-													</td>
-												</tr>
+<?php
+}
+?>
 											</tbody>
 										</table>
 										<!-- end project list -->
@@ -438,6 +293,7 @@
 							</div>
 						</div>
 					</div>
+					<!-- /Project where user is a simple member -->
 
 					<!-- footer content -->
 <?php include '../../footer.php'; ?>

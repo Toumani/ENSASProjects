@@ -31,15 +31,14 @@ try {
 	mkdir(SITE_ROOT . 'scrum/' . $userId, 0777, true);
 	$indexContent =
 '<?php
-session_start();
-
 include \'../index_template.php\';
 ';
 	file_put_contents(SITE_ROOT . 'scrum/' . $userId . '/index.php', $indexContent);
 
 	session_start();
-	$_SESSION['email'] = $email;
 	$_SESSION['id'] = $userId;
+	$_SESSION['email'] = $email;
+	$_SESSION['username'] = $username;
 	
 	header('Location:scrum/' . $userId . '/index.php');
 }
