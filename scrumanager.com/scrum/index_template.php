@@ -185,7 +185,7 @@ while ($masteredProject = $masteredProject_vrac->fetch()) {
 											</tbody>
 										</table>
 										<!-- end project list -->
-
+										<a href="new_project.php" class="btn btn-primary" style="float: right;margin: 0 3% 10px 0;">New project</a>
 									</div>
 								</div>
 							</div>
