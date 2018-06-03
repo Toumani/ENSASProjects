@@ -158,7 +158,7 @@ while ($masteredProject = $masteredProject_vrac->fetch()) {
 	while ($member = $member_vrac->fetch()) {
 ?>
 															<li>
-																<a href="../<?php echo $member['id']; ?>/dual/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
+																<a href="../../<?php echo $member['id']; ?>/dual/profile.php"><img src="../../<?php echo $member['id']; ?>/dual/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
 <?php
 	}
@@ -256,7 +256,7 @@ while ($memberedProject = $memberedProject_vrac->fetch()) {
 	while ($member = $member_vrac->fetch()) {
 ?>
 															<li>
-																<a href="../<?php echo $member['id']; ?>/dual/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
+																<a href="../../<?php echo $member['id']; ?>/dual/profile.php"><img src="../../<?php echo $member['id']; ?>/dual/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
 <?php
 	}
