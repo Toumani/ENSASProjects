@@ -25,7 +25,7 @@ try {
 
 	print_r($_SESSION);	
 
-	header('Location:scrum/' . $_SESSION['id'] . '/index.php');
+	header('Location:scrum/' . $_SESSION['id'] . '/dual/index.php');
 }
 catch (PDOException $ex) {
 

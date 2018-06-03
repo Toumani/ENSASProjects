@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-include '../../identifiants.php';
+include '../../../identifiants.php';
 
 $memberedProject_vrac = $database->query('SELECT id,name,folder_name,created,status,owner_id,master_id
 											FROM project P
@@ -28,7 +28,7 @@ function projectProgress($project_id) {
 
 	<head>
 		<title>Project list | SCRUManager</title>
-<?php include '../../meta.php'; ?>
+<?php include '../../../meta.php'; ?>
 	</head>
 
 
@@ -40,17 +40,17 @@ function projectProgress($project_id) {
 			<div class="main_container">
 
 				<div class="col-md-3 left_col">
-					<div class="left_col scroll-view">
+					<div id="left-pane" class="left_col scroll-view">
 
 						<div class="navbar nav_title" style="border: 0;">
-							<a href="../<?php echo $_SESSION['id']; ?>/index.php" class="site_title"><i class="fa fa-paw"></i><span>SCRUManager</span></a>
+							<a href="../<?php echo $_SESSION['id']; ?>/dual/index.php" class="site_title"><i class="fa fa-paw"></i><span> SCRUManager</span></a>
 						</div>
 						<div class="clearfix"></div>
 
 						<!-- menu prile quick info -->
 						<div class="profile">
 							<div class="profile_pic">
-								<img src="avatar.jpg" alt="..." class="img-circle profile_img">
+								<img src="img.jpg" alt="..." class="img-circle profile_img">
 							</div>
 							<div class="profile_info">
 								<span>Welcome,</span>
@@ -62,14 +62,14 @@ function projectProgress($project_id) {
 						<br />
 
 						<!-- sidebar menu + footer button -->
-<?php include '../../sidebar.php'; ?>
+<?php include '../../../sidebar.php'; ?>
 						<!-- /sidebar menu + footer button -->
 
 					</div>
 				</div>
 
 				<!-- top navigation -->
-<?php include '../../top_navigation.php'; ?>
+<?php include '../../../top_navigation.php'; ?>
 				<!-- /top navigation -->
 
 				<!-- page content -->
@@ -158,7 +158,7 @@ while ($masteredProject = $masteredProject_vrac->fetch()) {
 	while ($member = $member_vrac->fetch()) {
 ?>
 															<li>
-																<a href="../<?php echo $member['id']; ?>/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
+																<a href="../<?php echo $member['id']; ?>/dual/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
 <?php
 	}
@@ -256,7 +256,7 @@ while ($memberedProject = $memberedProject_vrac->fetch()) {
 	while ($member = $member_vrac->fetch()) {
 ?>
 															<li>
-																<a href="../<?php echo $member['id']; ?>/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
+																<a href="../<?php echo $member['id']; ?>/dual/index.php"><img src="../<?php echo $member['id']; ?>/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
 <?php
 	}
@@ -292,7 +292,7 @@ while ($memberedProject = $memberedProject_vrac->fetch()) {
 					<!-- /Project where user is a simple member -->
 
 					<!-- footer content -->
-<?php include '../../footer.php'; ?>
+<?php include '../../../footer.php'; ?>
 					<!-- /footer content -->
 
 				</div>
@@ -301,9 +301,9 @@ while ($memberedProject = $memberedProject_vrac->fetch()) {
 
 		</div>
 
-<?php include '../../custom_notifications.php'; ?>
+<?php include '../../../custom_notifications.php'; ?>
 
-<?php include '../../scripts.php'; ?>
+<?php include '../../../scripts.php'; ?>
 
 	</body>
 

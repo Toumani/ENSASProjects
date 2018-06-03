@@ -31,16 +31,16 @@ try {
 	mkdir(SITE_ROOT . 'scrum/' . $userId, 0777, true);
 	$indexContent =
 '<?php
-include \'../index_template.php\';
+include \'../../index_template.php\';
 ';
-	file_put_contents(SITE_ROOT . 'scrum/' . $userId . '/index.php', $indexContent);
+	file_put_contents(SITE_ROOT . 'scrum/' . $userId . '/dual/index.php', $indexContent);
 
 	session_start();
 	$_SESSION['id'] = $userId;
 	$_SESSION['email'] = $email;
 	$_SESSION['username'] = $username;
 	
-	header('Location:scrum/' . $userId . '/index.php');
+	header('Location:scrum/' . $userId . '/dual/index.php');
 }
 catch (PDOException $ex) {
 
