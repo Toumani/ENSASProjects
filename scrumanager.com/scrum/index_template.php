@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-$_SESSION['id'] = 1;
-$_SESSION['email'] = 'toumani49@gmail.com';
-$_SESSION['username'] = 'Toumani';
-
 include '../../identifiants.php';
 
 $memberedProject_vrac = $database->query('SELECT id,name,folder_name,created,status,owner_id,master_id
