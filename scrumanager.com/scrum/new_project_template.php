@@ -100,29 +100,39 @@ include '../../../identifiants.php';
 										<div class="clearfix"></div>
 									</div>
 
-									<form data-parsley-validate class="form-horizontal form-label-left" method="POST" action="add_project.php">
+									<form data-parsley-validate class="form-horizontal form-label-left" method="POST" action="../../../add_project.php">
 										<div class="form-group">
 											<label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">
 												Project Name <span class="required">*</span>
 											</label>
 											<div class="col-md-6 col-sm-6 col-xs-12">
-												<input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12">
+												<input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" name="project-name">
 											</div>
 										</div>
 										<div class="form-group">
-											<label class="control-label col-md-3 col-sm-3 col-xs-12">Project owner</label>
+											<label class="control-label col-md-3 col-sm-3 col-xs-12">Project owner *</label>
 											<div class="col-md-6 col-sm-6 col-xs-12">
-												<select class="select2_single form-control" tabindex="-1">
-													<option value="-1">-- Choose your project owner --</option>
-<?php
-$moa_vrac = $database->query('SELECT id,name,email FROM moa');
-while ($moa = $moa_vrac->fetch()) {
-?>
-													<option value="<?php echo $moa['id']; ?>"><?php echo $moa['name']; ?> - <?php echo $moa['email']; ?></option>
-<?php
-}
-?>
-												</select>
+												<input type="text" name="project-owner" id="project-owner" class="form-control col-md-10" style="float: left;" />
+												<div id="project-owner-container" required style="position: relative; float: left; width: 400px; margin: 10px;"></div>
+											</div>
+										</div>
+										<div class="form-group last-autocomplete">
+											<label class="control-label col-md-3 col-sm-3 col-xs-12">Co-workers</label>
+											<div class="col-md-6 col-sm-6 col-xs-12">
+												<input type="text" name="co-worker-1" id="autocomplete-co-workers-1" class="form-control col-md-10" style="float: left;" />
+												<div id="autocomplete-co-workers-container-1" style="position: relative; float: left; width: 400px; margin: 10px;"></div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="col-md-3 col-sm-3"></div>
+											<a id="add-co-worker" class="btn btn-app">
+												<i class="fa fa-plus"></i> Add
+											</a>
+										</div>
+										<div class="form-group">
+											<div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+												<a href="index.php" class="btn btn-primary">Cancel</a>
+												<button type="submit" class="btn btn-success">Create</button>
 											</div>
 										</div>
 									</form>
@@ -144,6 +154,94 @@ while ($moa = $moa_vrac->fetch()) {
 <?php include '../../../custom_notifications.php'; ?>
 
 <?php include '../../../scripts.php'; ?>
+
+		<!-- Autocomplete -->
+		<script src="../../../js/autocomplete/jquery.autocomplete.js"></script>
+		<!-- pace -->
+		<script src="../../../js/pace/pace.min.js"></script>
+		<script type="text/javascript">
+			// Project owner list
+			var moas = {
+<?php
+$moa_vrac = $database->query('SELECT id,name,email FROM moa');
+$moa = $moa_vrac->fetch();
+?>
+				'<?php echo $moa['id']; ?>' : '<?php echo $moa['name']; ?> - <?php echo $moa['email']; ?>'
+<?php
+while ($moa = $moa_vrac->fetch()) {
+?>
+				,'<?php echo $moa['id']; ?>' : '<?php echo $moa['name']; ?> - <?php echo $moa['email']; ?>'
+<?php
+}
+?>
+			};
+
+			// Developer list
+			var developers = {
+
+<?php
+$developer_vrac = $database->query('SELECT id,name,email FROM developer');
+$developer = $developer_vrac->fetch();
+?>
+				'<?php echo $developer['id']; ?>' : '<?php echo $developer['name']; ?> - <?php echo $developer['email']; ?>'
+<?php
+while ($developer = $developer_vrac->fetch()) {
+?>
+				,'<?php echo $developer['id']; ?>' : '<?php echo $developer['name']; ?> - <?php echo $developer['email']; ?>'
+<?php
+}
+?>
+			};
+			$(function() {
+				'use strict';
+				var moasArray = $.map(moas, function(value, key) {
+					return {
+					value: value,
+					data: key
+					};
+				});
+				// Initialize autocomplete with custom appendTo:
+				$('#project-owner').autocomplete({
+					lookup: moasArray,
+					appendTo: '#project-owner-container'
+				});
+
+				var developersArray = $.map(developers, function(value, key) {
+					return {
+					value: value,
+					data: key
+					};
+				});
+				// Initialize autocomplete with custom appendTo:
+				$('#autocomplete-co-workers-1').autocomplete({
+					lookup: developersArray,
+					appendTo: '#autocomplete-co-workers-container-1'
+				});
+
+				var autocompleteNb = 1;
+
+				$('#add-co-worker').on('click', function() {
+					autocompleteNb++;
+					var $oldLastAutocomplete = $('.last-autocomplete');
+					$oldLastAutocomplete.removeClass('last-autocomplete');
+					$(
+'					<div class="form-group last-autocomplete">\n\
+						<div class="col-md-3 col-sm-3 col-xs-12"></div>\n\
+						<div class="col-md-6 col-sm-6 col-xs-12">\n\
+							<input type="text" name="co-worker-' + autocompleteNb + '" id="autocomplete-co-workers-' + autocompleteNb + '" class="form-control col-md-10" style="float: left;" />\n\
+							<div id="autocomplete-co-workers-container-' + autocompleteNb + '" style="position: relative; float: left; width: 400px; margin: 10px;"></div>\n\
+						</div>\n\
+					</div>\n\
+'
+					).insertAfter($oldLastAutocomplete);
+					// Initialize autocomplete with custom appendTo:
+					$('#autocomplete-co-workers-' + autocompleteNb).autocomplete({
+						lookup: developersArray,
+						appendTo: '#autocomplete-co-workers-container-' + autocompleteNb
+					});
+				});
+			});
+		</script>
 
 	</body>
 
