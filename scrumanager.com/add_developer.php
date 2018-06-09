@@ -14,6 +14,7 @@ try {
 	$email = htmlspecialchars($_POST['email']);
 	$password = sha1($_POST['password']);
 	
+	// Fais une requête préparée féniasse !!
 	$emailExists = $database->query('SELECT email FROM developer WHERE email = \'' . $email . '\'')->fetch();
 	
 	if ($emailExists)

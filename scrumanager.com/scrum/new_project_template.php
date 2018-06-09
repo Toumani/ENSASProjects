@@ -106,13 +106,13 @@ include '../../../identifiants.php';
 												Project Name <span class="required">*</span>
 											</label>
 											<div class="col-md-6 col-sm-6 col-xs-12">
-												<input type="text" id="first-name" required="required" class="form-control col-md-7 col-xs-12" name="project-name">
+												<input type="text" id="project-name" required="required" class="form-control col-md-7 col-xs-12" name="project-name" value="Rapidex" />
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="control-label col-md-3 col-sm-3 col-xs-12">Project owner *</label>
 											<div class="col-md-6 col-sm-6 col-xs-12">
-												<input type="text" name="project-owner" id="project-owner" class="form-control col-md-10" style="float: left;" />
+												<input type="text" name="project-owner" id="project-owner" class="form-control col-md-10" style="float: left;" value="Seydou Sidibe - sidseydou@gmail.com" />
 												<div id="project-owner-container" required style="position: relative; float: left; width: 400px; margin: 10px;"></div>
 											</div>
 										</div>

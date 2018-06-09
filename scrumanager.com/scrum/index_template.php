@@ -11,7 +11,7 @@ $memberedProject_vrac = $database->query('SELECT id,name,folder_name,created,sta
 
 $masteredProject_vrac = $database->query('SELECT id,name,folder_name,created,status,owner_id,master_id
 											FROM project
-											WHERE owner_id = ' . $_SESSION['id']);
+											WHERE master_id = ' . $_SESSION['id']);
 // $
 function projectProgress($project_id) {
 	// TODO : return the progess in percentage of the project id given in parameter
@@ -158,7 +158,7 @@ while ($masteredProject = $masteredProject_vrac->fetch()) {
 	while ($member = $member_vrac->fetch()) {
 ?>
 															<li>
-																<a href="../../<?php echo $member['id']; ?>/dual/profile.php"><img src="../../<?php echo $member['id']; ?>/dual/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
+																<a href="../../../<?php echo $member['id']; ?>/dual/profile.php"><img src="../../<?php echo $member['id']; ?>/dual/img.jpg" class="avatar" alt="<?php echo $member['name']; ?>"></a>
 															</li>
 <?php
 	}

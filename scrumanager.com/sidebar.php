@@ -37,7 +37,7 @@ $developer_vrac->execute(Array($_SESSION['id'],$_SESSION['id'],$_SESSION['id']))
 while ($developer = $developer_vrac->fetch()) {
 ?>
 											<li>
-												<a href="../../<?php echo $developer['id']; ?>/dual/profile.php"><?php echo $developer['name']; ?></a>
+												<a href="../../../<?php echo $developer['id']; ?>/dual/profile.php"><?php echo $developer['name']; ?></a>
 											</li>
 <?php
 }
@@ -79,7 +79,7 @@ while($moa = $moa_vrac->fetch()) {
 							<a data-toggle="tooltip" data-placement="top" title="Lock">
 								<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
 							</a>
-							<a href="../../log_out.php" data-toggle="tooltip" data-placement="top" title="Logout">
+							<a href="../../../log_out.php" data-toggle="tooltip" data-placement="top" title="Logout">
 								<span class="glyphicon glyphicon-off" aria-hidden="true"></span>
 							</a>
 						</div>
