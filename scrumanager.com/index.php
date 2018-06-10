@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION['id']))
-header('Location:scrum/' . $_SESSION['id'] . '/index.php');
+header('Location:scrum/' . $_SESSION['id'] . '/dual/index.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
