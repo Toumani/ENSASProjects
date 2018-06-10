@@ -30,11 +30,18 @@ try {
 	// Now let's create a folder with the required files for the new user
 	$userId = $database->query('SELECT id FROM developer WHERE email = \''. $email . '\'')->fetch()['id'];
 	mkdir(SITE_ROOT . 'scrum/' . $userId, 0777, true);
+	mkdir(SITE_ROOT . 'scrum/' . $userId . '/dual', 0777, true);
 	$indexContent =
 '<?php
 include \'../../index_template.php\';
 ';
+$newProjectContent =
+'
+<?php
+include \'../../new_project_template.php\';
+';
 	file_put_contents(SITE_ROOT . 'scrum/' . $userId . '/dual/index.php', $indexContent);
+	file_put_contents(SITE_ROOT . 'scrum/' . $userId . '/dual/new_project.php', $newProjectContent);
 
 	session_start();
 	$_SESSION['id'] = $userId;
