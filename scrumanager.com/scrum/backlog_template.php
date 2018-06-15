@@ -14,6 +14,7 @@ $folderName = substr($URL, $start + strlen('/scrum/#/'), $end - ($start + strlen
 $project_vrac = $database->prepare('SELECT * FROM project WHERE folder_name = ? AND master_id = ?');
 $project_vrac->execute(Array($folderName,$masterId));
 $project = $project_vrac->fetch();
+$_SESSION['project-id'] = $project['id'];
 
 ?>
 <!DOCTYPE html>
@@ -212,7 +213,7 @@ while ($sprint = $sprint_vrac->fetch()) {
 ?>'
 	var userStoryHTML =
 '														<tr>\n\
-															<td><input type="text" name="us-name-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
+															<td><input type="text" name="us-story-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
 															<td><input type="number" min="1" name="us-cost-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
 															<td><input type="number" min="1" name="us-prio-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
 															<td>\n\
@@ -230,7 +231,7 @@ while ($sprint = $sprint_vrac->fetch()) {
 		userStoryCount++;
 		userStoryHTML =
 '														<tr>\n\
-															<td><input type="text" name="us-name-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
+															<td><input type="text" name="us-story-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
 															<td><input type="number" min="1" name="us-cost-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
 															<td><input type="number" min="1" name="us-prio-' + userStoryCount + '" class="form-control col-md-7 col-xs-12"/></td>\n\
 															<td>\n\
