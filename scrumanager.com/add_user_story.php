@@ -40,7 +40,10 @@ try {
 							VALUES (:text,:no,:prio,:cost,:project_id,:sprint_no)')
 					->execute($values);
 
-echo '<pre>'; print_r($values); echo '</pre>';
+		$project_vrac = $database->prepare('SELECT folder_name FROM project WHERE project_id = ?');
+		$project_vrac->execute(Array($_SESSION['project-id']));
+		$project = $project_vrac->fetch();
+		header('Location:scrum/' . $_SESSION['id'] . '/' . $project['folder_name'] . '/backlog.php');
 	}
 }
 catch (PDOException $ex) {

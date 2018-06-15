@@ -16,23 +16,39 @@ $project_vrac->execute(Array($folderName,$masterId));
 $project = $project_vrac->fetch();
 $_SESSION['project-id'] = $project['id'];
 
+$us_vrac = $database->prepare('	SELECT 
+								*
+								FROM
+								(SELECT 
+									text,US.no no,cost,priority,status,color
+								FROM
+									user_story US
+								LEFT JOIN sprint S ON S.no = US.sprint_no
+								WHERE
+									US.project_id = ?) AS duals
+									LEFT JOIN
+								color C ON duals.color = C.id;');
+$us_vrac->execute(Array($_SESSION['project-id']));
+
+$sprint_vrac = $database->prepare('SELECT * FROM sprint S LEFT JOIN color C ON S.color = C.id WHERE S.project_id = ?');
+$sprint_vrac->execute(Array($_SESSION['project-id']));
+
+$costDone_vrac = $database->prepare('SELECT SUM(cost) sum FROM user_story WHERE status = 1 AND project_id = ?');
+$costDone_vrac->execute(Array($_SESSION['project-id']));
+$costDone = (int) $costDone_vrac->fetch()['sum'];
+$costTotal_vrac = $database->prepare('SELECT SUM(cost) sum FROM user_story WHERE project_id = ?');
+$costTotal_vrac->execute(Array($_SESSION['project-id']));
+$costTotal = (int) $costTotal_vrac->fetch()['sum'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 	<head>
-		<title>Project list | SCRUManager</title>
+		<title><?php echo $project['name'] ?> - Backlog | SCRUManager</title>
 <?php include '../../../meta.php'; ?>
 	</head>
-
-
 	<body class="nav-md">
-
 		<div class="container body">
-
-
 			<div class="main_container">
-
 				<div class="col-md-3 left_col">
 					<div id="left-pane" class="left_col scroll-view">
 
@@ -108,44 +124,46 @@ $_SESSION['project-id'] = $project['id'];
 													</tr>
 												</thead>
 												<tbody>
-													<tr>
-														<th scope="row">1</th>
-														<td>Mark</td>
-														<td>Otto</td>
-														<td>@mdo</td>
-														<td>
+<?php
+while ($us = $us_vrac->fetch()) {
+?>
+													<tr style="background-color: rgba(<?php echo (($us['red'] ? $us['red'] : '255') . ',' . ($us['green'] ? $us['green'] : '255') . ',' . ($us['blue'] ? $us['blue'] : '255') . ',' . ($us['alpha'] ? $us['alpha'] : '0.5')); ?>)">
+														<th scope="row"><?php echo $us['no']; ?></th>
+														<td><?php echo $us['text']; ?></td>
+														<td><?php echo $us['cost']; ?></td>
+														<td><?php echo $us['priority']; ?></td>
+														<td style="vertical-align: middle;">
 															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
 														</td>
-														<td>@mdo</td>
+														<td><?php echo $us['status'] ? '<h3><span class="label label-success">Done!</span></h3>' : '<h4><span class="label label-default">On-going</span></h4>'; ?></td>
 													</tr>
-													<tr>
-														<th scope="row">2</th>
-														<td>Jacob</td>
-														<td>Thornton</td>
-														<td>@fat</td>
-														<td>
-															<span class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </span>
-														</td>
-														<td>@mdo</td>
-													</tr>
-													<tr>
-														<th scope="row">3</th>
-														<td>Larry</td>
-														<td>the Bird</td>
-														<td>@twitter</td>
-														<td>
-															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-														</td>
-														<td>@mdo</td>
-													</tr>
+<?php
+}
+?>
 												</tbody>
 												<tfoot>
-													<tr>
+													<tr style="text-align: right;font-weight: bold;">
 														<td></td>
 														<td>TOTAL</td>
-														<td>5/23</td>
+														<td><?php echo $costDone . '/' . $costTotal; ?></td>
+														<td></td>
+														<td></td>
+														<td></td>
 												</tfoot>
 											</table>
+											<br />
+											<h4>Listing</h4>
+											<ul style="list-style-type: none">
+<?php
+while ($sprint = $sprint_vrac->fetch()) {
+?>
+												<li>
+													<i class="fa fa-circle" style="color: rgb(<?php echo (($sprint['red'] ? $sprint['red'] : '255') . ',' . ($sprint['green'] ? $sprint['green'] : '255') . ',' . ($sprint['blue'] ? $sprint['blue'] : '255')); ?>);"></i> Sprint <?php echo $sprint['no']; ?>
+												</li>
+<?php
+}
+?>
+											</ul>
 										</div>
 									</div>
 								</div>
