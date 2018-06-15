@@ -49,6 +49,7 @@ CREATE TABLE sprint (
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     project_id INT NOT NULL,
+    color INT,
     PRIMARY KEY (no , project_id)
 )  ENGINE=INNODB;
 
@@ -65,6 +66,15 @@ CREATE TABLE project_developer (
     project_id INT NOT NULL,
     developer_id INT NOT NULL,
     PRIMARY KEY (project_id , developer_id)
+)  ENGINE=INNODB;
+
+CREATE TABLE color (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    red SMALLINT NOT NULL,
+    green SMALLINT NOT NULL,
+    blue SMALLINT NOT NULL,
+    alpha SMALLINT
 )  ENGINE=INNODB;
 
 ALTER TABLE project
@@ -86,3 +96,6 @@ ADD CONSTRAINT FOREIGN KEY (user_story_no) REFERENCES user_story (no);
 ALTER TABLE project_developer
 ADD CONSTRAINT FOREIGN KEY (project_id) REFERENCES project (id),
 ADD CONSTRAINT FOREIGN KEY (developer_id) REFERENCES developer (id);
+
+ALTER TABLE sprint
+ADD CONSTRAINT FOREIGN KEY (color) REFERENCES color(id);
