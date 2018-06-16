@@ -3,7 +3,8 @@ session_start();
 if (!isset($_SESSION['id']))
 	header('Location:index.php');
 
-include '../../../identifiants.php';
+require_once '../../../identifiants.php';
+require_once '../../../classes/Project.php';
 
 $_SESSION['project-selected'] = true;
 
@@ -17,6 +18,8 @@ $folderName = substr($URL, $start + strlen('/scrum/#/'), $end - ($start + strlen
 $project_vrac = $database->prepare('SELECT * FROM project WHERE folder_name = ? AND master_id = ?');
 $project_vrac->execute(Array($folderName,$masterId));
 $project = $project_vrac->fetch();
+
+$Project = new Project($project['id']);
 
 $memberCount = (int) ($database->query('	SELECT COUNT(*) as count
 											FROM project_developer
@@ -107,59 +110,7 @@ $memberCount = (int) ($database->query('	SELECT COUNT(*) as count
 										</ul>
 										<br />
 										<div class="x_content">
-											<table class="table table-hover">
-												<thead>
-													<tr>
-														<th>#</th>
-														<th style="width: 75%">User story</th>
-														<th>Cost</th>
-														<th>Prio</th>
-														<th>Edit</th>
-														<th style="width: 10%">Status</th>
-													</tr>
-												</thead>
-												<tbody>
-													<tr>
-														<th scope="row">1</th>
-														<td>Mark</td>
-														<td>Otto</td>
-														<td>@mdo</td>
-														<td>
-															<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-														</td>
-														<td>@mdo</td>
-													</tr>
-													<tr>
-														<th scope="row">2</th>
-														<td>Jacob</td>
-														<td>Thornton</td>
-														<td>@fat</td>
-														<td>
-															<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-														</td>
-														<td>@mdo</td>
-													</tr>
-													<tr>
-														<th scope="row">3</th>
-														<td>Larry</td>
-														<td>the Bird</td>
-														<td>@twitter</td>
-														<td>
-															<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
-															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
-														</td>
-														<td>@mdo</td>
-													</tr>
-												</tbody>
-												<tfoot>
-													<tr>
-														<td></td>
-														<td>TOTAL</td>
-														<td>5/23</td>
-												</tfoot>
-											</table>
+<?php $Project->printBacklog(5); ?>
 											<a href="backlog.php" class="btn btn-primary" style="float: right;margin: 0 3% 10px 0;">See entire backlog</a>
 										</div>
 										<div>
@@ -228,37 +179,13 @@ $memberCount = (int) ($database->query('	SELECT COUNT(*) as count
 											</div>
 											<div class="panel-body">
 												<h3 class="green"><i class="fa fa-paint-brush"></i> Gentelella</h3>
-												<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terr.</p>
+<?php $Project->printDescription(); ?>
 												<br />
 												<div class="project_detail">
 													<p class="title">Client Company</p>
-													<p>Deveint Inc</p>
+													<p><?php echo $Project->getMoa(); ?></p>
 													<p class="title">Project Leader</p>
-													<p>Tony Chicken</p>
-												</div>
-												<br />
-												<h5>Project files</h5>
-												<ul class="list-unstyled project_files">
-													<li>
-														<a href=""><i class="fa fa-file-word-o"></i> Functional-requirements.docx</a>
-													</li>
-													<li>
-														<a href=""><i class="fa fa-file-pdf-o"></i> UAT.pdf</a>
-													</li>
-													<li>
-														<a href=""><i class="fa fa-mail-forward"></i> Email-from-flatbal.mln</a>
-													</li>
-													<li>
-														<a href=""><i class="fa fa-picture-o"></i> Logo.png</a>
-													</li>
-													<li>
-														<a href=""><i class="fa fa-file-word-o"></i> Contract-10_12_2014.docx</a>
-													</li>
-												</ul>
-												<br />
-												<div class="text-center mtop20">
-													<a href="#" class="btn btn-sm btn-primary">Add files</a>
-													<a href="#" class="btn btn-sm btn-warning">Report contact</a>
+													<p><?php echo $Project->getMaster(); ?></p>
 												</div>
 											</div>
 										</section>

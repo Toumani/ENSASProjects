@@ -4,7 +4,13 @@ if (!isset($_SESSION['id']))
 	header('Location:/index.php');
 
 require_once '../../../identifiants.php';
+
 require_once '../../../classes/Project.php';
+
+		$costTotal_vrac = $database->prepare('SELECT SUM(cost) + 5 sum FROM user_story WHERE project_id = ?');
+		$costTotal_vrac->execute(Array(1));
+		$costTotal = (int) $costTotal_vrac->fetch()['sum'];
+		echo 'cost total : ' . $costTotal;
 
 $_SESSION['project-selected'] = true;
 

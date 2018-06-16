@@ -1,6 +1,8 @@
 <?php
 class Project {
 	private $id;
+	private $ownerId;
+	private $masterId;
 	private static $database;
 
 	private $backlogPrepared = false;
@@ -12,7 +14,10 @@ class Project {
 	private $costTotal;
 
 	public function Project($id) {
-		$this->id = $id;
+		$this->id = (int)$id;
+		$project = Project::$database->query('SELECT * FROM project WHERE id = ' . $id)->fetch();
+		$this->ownerId = $project['owner_id'];
+		$this->masterId = $project['master_id'];
 	}
 
 	public static function setDatabase($database) {
@@ -38,7 +43,7 @@ class Project {
 			$this->us_vrac->execute(Array($this->id));
 		}
 		else {
-		$this->us_vrac = Project::$database->prepare('	SELECT 
+			$this->us_vrac = Project::$database->prepare('	SELECT 
 										*
 										FROM
 										(SELECT 
@@ -65,12 +70,19 @@ class Project {
 
 		$costTotal_vrac = Project::$database->prepare('SELECT SUM(cost) sum FROM user_story WHERE project_id = ?');
 		$costTotal_vrac->execute(Array($this->id));
-		$this->costTotal = (int) $costTotal_vrac->fetch()['sum'];
+		$costTotal = $costTotal_vrac->fetch();
+//echo 'POO : ' . $this->costDone . ' and ' . $costTotal['sum'];
+		$this->costTotal = $costTotal['sum'];
+
+		$this->backlogPrepared = true;
 	}
 
 	public function printBacklog() {
-		if (!$this->backlogPrepared)
+		if (!$this->backlogPrepared) {
+			// I don't know why but the function must be called twice in order to work properly !!!
 			$this->prepareBacklog();
+			$this->prepareBacklog();
+		}
 ?>
 											<table class="table table-hover">
 												<thead>
@@ -115,22 +127,37 @@ while ($this->us = $this->us_vrac->fetch()) {
 	} // End of printBacklog()
 
 	public function printSprints() {
-		if (!$this->backlogPrepared)
+		if (!$this->backlogPrepared) {
 			$this->prepareBacklog();
+			$this->prepareBacklog();
+		}
 ?>
 											<h4>Listing</h4>
 											<ul style="list-style-type: none">
 <?php
-while ($this->sprint = $this->sprint_vrac->fetch()) {
+			while ($this->sprint = $this->sprint_vrac->fetch()) {
 ?>
 												<li>
 													<i class="fa fa-circle" style="color: rgb(<?php echo (($this->sprint['red'] ? $this->sprint['red'] : '255') . ',' . ($this->sprint['green'] ? $this->sprint['green'] : '255') . ',' . ($this->sprint['blue'] ? $this->sprint['blue'] : '255')); ?>);"></i> Sprint <?php echo $this->sprint['no']; ?>
 												</li>
 <?php
-}
+			}
 ?>
 											</ul>
 <?php
+	} // End of printSprints()
+
+	public function printDescription() {
+?>
+		<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terr.</p>
+<?php
+	}
+
+	public function getMoa() {
+		return Project::$database->query('SELECT name FROM moa WHERE id = ' . $this->ownerId)->fetch()['name'];
+	}
+	public function getMaster() {
+		return Project::$database->query('SELECT name FROM developer WHERE id = ' . $this->masterId)->fetch()['name'];
 	}
 }
 
