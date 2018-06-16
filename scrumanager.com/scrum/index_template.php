@@ -1,9 +1,11 @@
 <?php
 session_start();
 if (!isset($_SESSION['id']))
-	header('Location:index.php');
+	header('Location:/index.php');
 
 include '../../../identifiants.php';
+
+$_SESSION['project-selected'] = false;
 
 $memberedProject_vrac = $database->query('SELECT id,name,folder_name,created,status,owner_id,master_id
 											FROM project P
@@ -15,12 +17,17 @@ $masteredProject_vrac = $database->query('SELECT id,name,folder_name,created,sta
 											FROM project
 											WHERE master_id = ' . $_SESSION['id']);
 // $
-function projectProgress($project_id) {
+function projectProgress($project_id, $database) {
 	// TODO : return the progess in percentage of the project id given in parameter
 	// To do so just sum up the cost of completed user stories and take it ratio with the tatal cost of the backlog
+	$costDone_vrac = $database->prepare('SELECT SUM(cost) sum FROM user_story WHERE status = 1 AND project_id = ?');
+	$costDone_vrac->execute(Array($project_id));
+	$costDone = (int) $costDone_vrac->fetch()['sum'];
+	$costTotal_vrac = $database->prepare('SELECT SUM(cost) sum FROM user_story WHERE project_id = ?');
+	$costTotal_vrac->execute(Array($project_id));
+	$costTotal = (int) $costTotal_vrac->fetch()['sum'];
 	
-	// Facking
-	return random_int(1,100);
+	return $costDone / $costTotal;
 }
 
 
@@ -41,34 +48,9 @@ function projectProgress($project_id) {
 
 			<div class="main_container">
 
-				<div class="col-md-3 left_col">
-					<div id="left-pane" class="left_col scroll-view">
-
-						<div class="navbar nav_title" style="border: 0;">
-							<a href="../<?php echo $_SESSION['id']; ?>/dual/index.php" class="site_title"><i class="fa fa-paw"></i><span> SCRUManager</span></a>
-						</div>
-						<div class="clearfix"></div>
-
-						<!-- menu prile quick info -->
-						<div class="profile">
-							<div class="profile_pic">
-								<img src="img.jpg" alt="..." class="img-circle profile_img">
-							</div>
-							<div class="profile_info">
-								<span>Welcome,</span>
-								<h2><?php echo $_SESSION['username']; ?></h2>
-							</div>
-						</div>
-						<!-- /menu prile quick info -->
-
-						<br />
-
-						<!-- sidebar menu + footer button -->
+				<!-- menu prile + sidebar menu + footer button -->
 <?php include '../../../sidebar.php'; ?>
-						<!-- /sidebar menu + footer button -->
-
-					</div>
-				</div>
+				<!-- /menu prile + sidebar menu + footer button -->
 
 				<!-- top navigation -->
 <?php include '../../../top_navigation.php'; ?>
@@ -140,7 +122,7 @@ function projectProgress($project_id) {
 $i = 0;
 while ($masteredProject = $masteredProject_vrac->fetch()) {
 	$i++;
-	$projectProgress = projectProgress($masteredProject['id']);
+	$projectProgress = projectProgress($masteredProject['id'], $database);
 	$member_vrac = $database->query('	SELECT id,name
 										FROM project_developer PD
 										INNER JOIN developer D
@@ -150,7 +132,7 @@ while ($masteredProject = $masteredProject_vrac->fetch()) {
 												<tr>
 													<td><?php echo $i; ?></td>
 													<td>
-														<a><?php echo $masteredProject['name']; ?></a>
+														<a href="../<?php echo $masteredProject['folder_name']; ?>/overview.php"><?php echo $masteredProject['name']; ?></a>
 														<br />
 														<small>Created <?php echo $masteredProject['created']; ?></small>
 													</td>

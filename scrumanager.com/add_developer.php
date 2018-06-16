@@ -13,6 +13,7 @@ try {
 	$username = htmlspecialchars($_POST['username']);
 	$email = htmlspecialchars($_POST['email']);
 	$password = sha1($_POST['password']);
+	$profile = '../../../images/img.jpg';
 	
 	// Fais une requête préparée féniasse !!
 	$emailExists = $database->query('SELECT email FROM developer WHERE email = \'' . $email . '\'')->fetch();
@@ -22,10 +23,11 @@ try {
 	
 	// Everything is okay
 	// Let's insert the new user into the database
-	$database->prepare('INSERT INTO developer (name,email,password) VALUES (:name,:email,:password)')
+	$database->prepare('INSERT INTO developer (name,email,password,profile) VALUES (:name,:email,:password,:profile)')
 			->execute(Array('name' => $username,
 							'email' => $email,
-							'password' => $password));
+							'password' => $password,
+							'profile' => $profile));
 	
 	// Now let's create a folder with the required files for the new user
 	$userId = $database->query('SELECT id FROM developer WHERE email = \''. $email . '\'')->fetch()['id'];
@@ -47,6 +49,8 @@ include \'../../new_project_template.php\';
 	$_SESSION['id'] = $userId;
 	$_SESSION['email'] = $email;
 	$_SESSION['username'] = $username;
+	$_SESSION['profile'] = $profile;
+	$_SESSION['project-selected'] = false;
 	
 	header('Location:scrum/' . $userId . '/dual/index.php');
 }

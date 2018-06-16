@@ -5,6 +5,8 @@ if (!isset($_SESSION['id']))
 
 include '../../../identifiants.php';
 
+$_SESSION['project-selected'] = true;
+
 // Retrieving master's ID and folder name from URL
 $URL = $_SERVER['PHP_SELF'];
 $start = strpos($URL,'/scrum/'); $end = strpos($URL,'overview.php');
@@ -19,15 +21,6 @@ $project = $project_vrac->fetch();
 $memberCount = (int) ($database->query('	SELECT COUNT(*) as count
 											FROM project_developer
 											WHERE project_id = ' . $project['id'])->fetch())['count'] + 1;
-// $
-function projectProgress($project_id) {
-	// TODO : return the progess in percentage of the project id given in parameter
-	// To do so just sum up the cost of completed user stories and take it ratio with the tatal cost of the backlog
-	
-	// Facking
-	return random_int(1,100);
-}
-
 
 ?>
 <!DOCTYPE html>
@@ -46,34 +39,9 @@ function projectProgress($project_id) {
 
 			<div class="main_container">
 
-				<div class="col-md-3 left_col">
-					<div id="left-pane" class="left_col scroll-view">
-
-						<div class="navbar nav_title" style="border: 0;">
-							<a href="../<?php echo $_SESSION['id']; ?>/dual/index.php" class="site_title"><i class="fa fa-paw"></i><span> SCRUManager</span></a>
-						</div>
-						<div class="clearfix"></div>
-
-						<!-- menu prile quick info -->
-						<div class="profile">
-							<div class="profile_pic">
-								<img src="img.jpg" alt="..." class="img-circle profile_img">
-							</div>
-							<div class="profile_info">
-								<span>Welcome,</span>
-								<h2><?php echo $_SESSION['username']; ?></h2>
-							</div>
-						</div>
-						<!-- /menu prile quick info -->
-
-						<br />
-
-						<!-- sidebar menu + footer button -->
+				<!-- menu prile + sidebar menu + footer button -->
 <?php include '../../../sidebar.php'; ?>
-						<!-- /sidebar menu + footer button -->
-
-					</div>
-				</div>
+				<!-- /menu prile + sidebar menu + footer button -->
 
 				<!-- top navigation -->
 <?php include '../../../top_navigation.php'; ?>
