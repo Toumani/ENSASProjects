@@ -10,7 +10,7 @@ require_once '../../../classes/Project.php';
 $_SESSION['project-selected'] = true;
 
 $URL = $_SERVER['PHP_SELF'];
-$start = strpos($URL,'/scrum/'); $end = strpos($URL,'backlog.php');
+$start = strpos($URL,'/scrum/'); $end = strpos($URL,'sprints.php');
 
 $masterId = substr($URL, $start + strlen('/scrum/'), 1);
 $folderName = substr($URL, $start + strlen('/scrum/#/'), $end - ($start + strlen('/scrum/#/') + 1));
@@ -25,7 +25,7 @@ $Project = new Project($project['id']);
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title><?php echo $project['name'] ?> - Backlog | SCRUManager</title>
+		<title><?php echo $project['name'] ?> - Sprints | SCRUManager</title>
 <?php include '../../../meta.php'; ?>
 	</head>
 	<body class="nav-md">
@@ -70,7 +70,7 @@ $Project = new Project($project['id']);
 								<div class="x_content">
 									<div class="col-md-12 col-sm-12 col-xs-12">
 										<div class="x_content">
-<?php $Project->printBacklog(); ?>
+<?php $Project->printSprints(); ?>
 											<br />
 <?php $Project->listSprints(); ?>
 										</div>

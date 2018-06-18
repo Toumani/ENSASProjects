@@ -27,7 +27,7 @@ function projectProgress($project_id, $database) {
 	$costTotal_vrac->execute(Array($project_id));
 	$costTotal = (int) $costTotal_vrac->fetch()['sum'];
 	
-	return $costDone / $costTotal;
+	return (int) ($costDone / $costTotal * 100);
 }
 
 
@@ -159,7 +159,7 @@ while ($masteredProject = $masteredProject_vrac->fetch()) {
 														<button type="button" class="btn btn-success btn-xs">Fine</button>
 													</td>
 													<td>
-														<a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
+														<a href="../<?php echo $masteredProject['folder_name']; ?>/overview.php" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a>
 														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
 													</td>
 												</tr>

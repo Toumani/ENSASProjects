@@ -1,6 +1,9 @@
 <?php
+require_once 'Sprint.php';
+
 class Project {
 	private $id;
+	private $name;
 	private $ownerId;
 	private $masterId;
 	private static $database;
@@ -13,9 +16,14 @@ class Project {
 	private $costDone;
 	private $costTotal;
 
+	private $sprintsPrepared = false;
+	private $Sprint;
+	private $nbSprits = 0;
+
 	public function Project($id) {
 		$this->id = (int)$id;
 		$project = Project::$database->query('SELECT * FROM project WHERE id = ' . $id)->fetch();
+		$this->name = $project['name'];
 		$this->ownerId = $project['owner_id'];
 		$this->masterId = $project['master_id'];
 	}
@@ -75,7 +83,16 @@ class Project {
 		$this->costTotal = $costTotal['sum'];
 
 		$this->backlogPrepared = true;
-	}
+	} // End of prepareBacklog()
+
+	public function prepareSprints() {
+		$sprint_vrac = Project::$database->query('SELECT no FROM sprint WHERE project_id = ' . $this->id);
+		for ($i = 0; $sprint = $sprint_vrac->fetch(); $i++) {
+			$this->Sprint[$i] = new Sprint($sprint['no'], $this->id);
+		}
+		$nbSprits = $i;
+		$this->sprintsPrepared = true;
+	} // end of prepareSprints()
 
 	public function printBacklog() {
 		if (!$this->backlogPrepared) {
@@ -107,7 +124,7 @@ while ($this->us = $this->us_vrac->fetch()) {
 														<td style="vertical-align: middle;">
 															<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
 														</td>
-														<td><?php echo $this->us['status'] ? '<h3><span class="label label-success">Done!</span></h3>' : '<h4><span class="label label-default">On-going</span></h4>'; ?></td>
+														<td><?php echo $this->us['status'] ? '<h3><span class="btn btn-success btn-sm">Done!</span></h3>' : '<h4><span class="btn btn-default btn-xs">On-going</span></h4>'; ?></td>
 													</tr>
 <?php
 }
@@ -127,6 +144,45 @@ while ($this->us = $this->us_vrac->fetch()) {
 	} // End of printBacklog()
 
 	public function printSprints() {
+		if (!$this->sprintsPrepared)
+			$this->prepareSprints();
+?>
+											<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th style="width: 75%">Sprint user stories</th>
+													<th>Start date</th>
+													<th>End date</th>
+													<th>Edit</th>
+													<th style="width: 10%">Status</th>
+												</tr>
+											</thead>
+											<tbody>
+<?php
+		foreach ($this->Sprint as $key => $value) {
+			$sprint_r = (Array) $value;
+?>
+												<tr style="background-color: rgba(<?php echo (($sprint_r['color']['red'] ? $sprint_r['color']['red'] : '255') . ',' . ($sprint_r['color']['green'] ? $sprint_r['color']['green'] : '255') . ',' . ($sprint_r['color']['blue'] ? $sprint_r['color']['blue'] : '255') . ',' . ($sprint_r['color']['alpha'] ? $sprint_r['color']['alpha'] : '0.5')); ?>)">
+													<th scope="row"><?php echo $sprint_r['no']; ?></th>
+													<td><?php $this->Sprint[$key]->listUs(); ?>
+													</td>
+													<td><?php echo $sprint_r['startDate']; ?></td>
+													<td><?php echo $sprint_r['endDate']; ?></td>
+													<td style="vertical-align: middle;">
+														<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>
+													</td>
+													<td><?php echo false ? '<h3><span class="btn btn-success btn-sm">Done!</span></h3>' : '<h4><span class="btn btn-default btn-xs">On-going</span></h4>'; ?></td>
+												</tr>
+<?php
+		}
+?>
+											</tbody>
+										</table>
+<?php
+	} // End function printSprints()
+
+	public function listSprints() {
 		if (!$this->backlogPrepared) {
 			$this->prepareBacklog();
 			$this->prepareBacklog();
@@ -145,13 +201,15 @@ while ($this->us = $this->us_vrac->fetch()) {
 ?>
 											</ul>
 <?php
-	} // End of printSprints()
+	} // End of listsSprints()
 
 	public function printDescription() {
 ?>
 		<p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terr.</p>
 <?php
 	}
+
+	public function getName() { return $this->name; }
 
 	public function getMoa() {
 		return Project::$database->query('SELECT name FROM moa WHERE id = ' . $this->ownerId)->fetch()['name'];

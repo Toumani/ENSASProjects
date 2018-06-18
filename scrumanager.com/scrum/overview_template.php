@@ -178,7 +178,7 @@ $memberCount = (int) ($database->query('	SELECT COUNT(*) as count
 												<div class="clearfix"></div>
 											</div>
 											<div class="panel-body">
-												<h3 class="green"><i class="fa fa-paint-brush"></i> Gentelella</h3>
+												<h3 class="green"><i class="fa fa-paint-brush"></i> <?php echo $Project->getName(); ?></h3>
 <?php $Project->printDescription(); ?>
 												<br />
 												<div class="project_detail">
